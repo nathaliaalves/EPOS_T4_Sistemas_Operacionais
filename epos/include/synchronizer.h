@@ -32,7 +32,7 @@ protected:
 
 protected:
     Queue _queue;
-    Thread acquired_resource;
+    Thread * acquired_resource;
 };
 
 __END_SYS

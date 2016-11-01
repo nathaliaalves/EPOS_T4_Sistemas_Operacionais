@@ -22,9 +22,9 @@ void Mutex::lock()
 
     begin_atomic();
     if(tsl(_locked)){
-
-    	if(this->acquired_resource.priority() < Thread::self()->priority()) {
-    		this->acquired_resource.priority(Thread::self()->priority());
+	Thread::Priority p = Thread::self()->priority();
+    	if(this->acquired_resource->priority() < Thread::self()->priority()) {
+    		this->acquired_resource->priority(p);
     	}
 
         sleep(); // implicit end_atomic()
@@ -43,7 +43,7 @@ void Mutex::unlock()
 
     begin_atomic();
 
-    this->acquired_resource.reset_priority();
+    this->acquired_resource->reset_priority();
 
     if(_queue.empty()) {
         _locked = false;
