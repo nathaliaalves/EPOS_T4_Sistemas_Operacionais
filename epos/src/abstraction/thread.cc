@@ -43,6 +43,8 @@ void Thread::constructor_epilog(const Log_Addr & entry, unsigned int stack_size)
         default: _ready.insert(&_link);
     }
 
+    original_priority = _link.rank();
+
     unlock();
 }
 
@@ -307,6 +309,10 @@ int Thread::idle()
     CPU::halt();
 
     return 0;
+}
+
+void Thread::reset_priority(){
+	this->priority(this->original_priority);
 }
 
 __END_SYS

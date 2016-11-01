@@ -71,7 +71,8 @@ public:
     const volatile State & state() const { return _state; }
 
     const volatile Priority & priority() const { return _link.rank(); }
-    void priority(const Priority & p);
+    void priority(const Priority & p) { _link.rank(p); };
+    void reset_priority();
 
     int join();
     void pass();
@@ -116,6 +117,8 @@ protected:
     static Scheduler_Timer * _timer;
 
 private:
+    Priority original_priority;
+
     static Thread * volatile _running;
     static Queue _ready;
     static Queue _suspended;
