@@ -22,9 +22,17 @@ void Semaphore::p()
 
     begin_atomic();
     if(fdec(_value) < 1)
+   {
+        Thread::Priority p = Thread::self()->priority();
+        if(this->acquired_resource->priority() < Thread::self()->priority()) {
+            this->acquired_resource->priority(p);
+        }
         sleep(); // implicit end_atomic()
-    else
+    }
+    else {
+        this->acquired_resource = Thread::self();
         end_atomic();
+    }
 }
 
 
@@ -33,6 +41,9 @@ void Semaphore::v()
     db<Synchronizer>(TRC) << "Semaphore::v(this=" << this << ",value=" << _value << ")" << endl;
 
     begin_atomic();
+
+    this->acquired_resource->reset_priority();
+
     if(finc(_value) < 0)
         wakeup();  // implicit end_atomic()
     else
